@@ -7,5 +7,5 @@ flowchart TD
     C -->|Two| E[KHALISS]
     C -->|Three| F[ARGENT]
     C -->|Four| G[MONEY]
-    C -->|Five| H[def si nagueu rek dou lakh]
+    C -->|Five| H[def si nank rek dou lakh]
 ```
