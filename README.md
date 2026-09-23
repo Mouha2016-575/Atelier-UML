@@ -18,5 +18,4 @@ Customer --> PlaceOrder
 Customer --> TrackOrder
 SupportAgent --> ProcessOrders
 SupportAgent --> HandleReturns
-  
 ```
