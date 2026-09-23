@@ -1,9 +1,9 @@
 # Atelier-UML
 ```mermaid
 flowchart TD
-    A[Christmas] -->|Get money| B(Go shopping)
-    B --> C{Let me think}
-    C -->|One| D[Laptop]
-    C -->|Two| E[iPhone]
-    C -->|Three| F[fa:fa-car Car]
+    A[Famille] -->|riider| B(Dagn Sé Bonn d)
+    B --> C{PAPA ET MAMAN}
+    C -->|3| D[Riider]
+    C -->|2| E[Assane]
+    C -->|1| F[Awa]
 ```
