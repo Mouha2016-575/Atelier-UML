@@ -3,9 +3,9 @@
 flowchart TD
     A[TRAVEL] -->|Get money| B(Go DUBAI)
     B --> C{Let me think}
-    C -->|One| D[CARS]
-    C -->|Two| E[PORTA PORTY]
-    C -->|Three| F[BURJ KKHALIFA]
-    C -->|Four| G[FULL BBL]
+    C -->|One| D[DRAHAM]
+    C -->|Two| E[KHALISS]
+    C -->|Three| F[ARGENT]
+    C -->|Four| G[MONEY]
     C -->|Five| H[def si nagueu rek dou lakh]
 ```
