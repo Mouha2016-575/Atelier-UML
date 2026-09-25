@@ -1,3 +1,4 @@
+```mermaid
 sequenceDiagram
     actor R as Réceptionniste
     participant S as Système
