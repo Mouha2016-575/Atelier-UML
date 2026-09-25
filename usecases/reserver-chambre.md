@@ -1,48 +1,34 @@
-# UC01 — Réserver une chambre
+# Fiche — Réserver une chambre
 
-## Acteurs
+**Acteur principal :** le réservant (le client lui-même, ou un agent de voyage qui réserve pour lui).
 
-**Acteur principal :** client ou agent de voyage partenaire agissant pour un client identifié.
+**Acteur secondaire :** le service de paiement (pour les arrhes).
 
-**Acteur secondaire :** service de paiement pour les arrhes.
+## Précondition
 
-**Objectif :** obtenir une réservation d'une chambre adaptée au nombre d'occupants et disponible sur toute la période.
-
-## Préconditions
-
-- Les hôtels, catégories, chambres, capacités et tarifs sont renseignés.
-- Le demandeur peut fournir les coordonnées du client bénéficiaire.
-- Les règles d'arrhes sont disponibles. Aucune chambre n'est supposée disponible avant le contrôle effectué dans le scénario.
+Les hôtels, les chambres et les tarifs sont déjà enregistrés dans le logiciel.
 
 ## Scénario nominal
 
-Le scénario décrit une réservation réalisée plus de 8 jours avant l'arrivée, avec paiement réussi des arrhes.
+Cas d'une réservation faite plus de 8 jours avant l'arrivée.
 
-1. Le demandeur indique l'hôtel souhaité, les dates d'arrivée et de départ, le nombre d'occupants et éventuellement une catégorie.
-2. Le système contrôle les dates et le nombre d'occupants, puis présente les chambres de capacité suffisante disponibles sur toutes les nuits, avec le montant d'hébergement calculé selon le tarif et les occupants.
-3. Le demandeur choisit une chambre et renseigne ou confirme l'identité et les coordonnées du client ; l'agent indique le client pour lequel il agit.
-4. Le système récapitule chambre, période, occupants, prix, conditions d'annulation et arrhes exigées d'au moins 10 % du montant d'hébergement, selon l'hypothèse indiquée dans l'index.
-5. Le demandeur accepte. Le système revérifie la disponibilité et enregistre atomiquement une réservation « en attente d'arrhes », qui bloque les nuits concernées, avec sa référence et son échéance à J-8.
-6. Le demandeur effectue le versement requis via le service de paiement ; le système reçoit et vérifie la confirmation de l'encaissement.
-7. Le système rattache le paiement à la réservation, vérifie que le montant atteint les arrhes exigées et passe la réservation à « confirmée ».
-8. Le système présente la référence, le récapitulatif et la confirmation au demandeur.
+1. Le réservant choisit un hôtel, ses dates d'arrivée et de départ, et le nombre de personnes.
+2. Le système affiche les chambres libres sur toutes ces nuits, assez grandes pour le nombre de personnes, avec leur prix.
+3. Le réservant choisit une chambre.
+4. Le réservant donne le nom et les coordonnées du client.
+5. Le système affiche un résumé : chambre, dates, nombre de personnes, prix, et montant des arrhes (10 % minimum du prix).
+6. Le réservant valide. Le système enregistre la réservation « en attente d'arrhes » et bloque la chambre pour ces nuits.
+7. Le réservant paie les arrhes par le service de paiement (cas *Verser les arrhes*).
+8. Le système passe la réservation en « confirmée » et donne un numéro de réservation.
 
-## Alternatives et exceptions
+## Alternatives
 
-- **2a — Dates ou occupants invalides :** le système explique l'erreur (départ non postérieur à l'arrivée, nombre non positif, capacité insuffisante). Le demandeur corrige à l'étape 1 ; aucune réservation n'est créée.
-- **2b — Aucune chambre disponible :** le système indique l'absence de résultat. Le demandeur change ses critères à l'étape 1 ou abandonne sans réservation.
-- **3a — Informations client incomplètes :** le système demande les données manquantes et reste à l'étape 3.
-- **4a — Arrivée dans 8 jours ou moins :** les arrhes ne sont pas exigées par l'énoncé. Après acceptation, le contrôle et l'enregistrement atomiques de l'étape 5 créent directement une réservation confirmée ; les étapes 6 et 7 sont omises, puis reprise à l'étape 8.
-- **5a — Chambre réservée entre-temps :** l'enregistrement est refusé sans créer de doublon ni déclencher de paiement. Le système actualise les disponibilités et revient à l'étape 2.
-- **6a — Paiement refusé ou abandonné :** la réservation reste en attente. Le demandeur peut réessayer avant J-8. Sans encaissement suffisant à cette échéance, le cas automatique annule la réservation et libère les nuits.
-- **6b — Résultat du paiement inconnu :** le système conserve un état à rapprocher et vérifie la transaction auprès du service avant toute nouvelle demande de paiement, afin d'éviter un double encaissement.
-- **7a — Montant encaissé insuffisant :** la réservation n'est pas confirmée ; le système indique le complément requis. Elle reste soumise à l'échéance de J-8.
-- **7b — Annulation à J-8 déjà effectuée :** un retour de paiement tardif ne réactive pas automatiquement la réservation. Le système signale le paiement à régulariser, notamment par remboursement, et conserve les nuits déjà réattribuées.
+- **2a — Aucune chambre libre :** le système prévient le réservant, qui change ses dates ou son hôtel (retour à l'étape 1) ou abandonne.
+- **2b — Trop de personnes pour les chambres de l'hôtel :** le système affiche un message d'erreur, retour à l'étape 1.
+- **5a — Arrivée dans 8 jours ou moins :** pas d'arrhes à payer. À l'étape 6, la réservation est directement confirmée, puis on passe à l'étape 8.
+- **6a — La chambre a été prise entre-temps par quelqu'un d'autre :** le système refuse l'enregistrement (une chambre ne peut pas être réservée deux fois la même nuit) et revient à l'étape 2.
+- **7a — Le paiement est refusé :** la réservation reste « en attente d'arrhes ». Le réservant peut réessayer plus tard. Si rien n'est payé à J-8, la réservation est annulée automatiquement.
 
-## Postconditions
+## Postcondition
 
-**Succès :** une réservation confirmée et référencée associe exactement une chambre, une période et un nombre d'occupants compatible avec la capacité. Aucun chevauchement de nuits n'existe. Pour une réservation anticipée, les arrhes exigées ont été encaissées et rattachées une seule fois.
-
-**Attente :** une réservation anticipée sans arrhes suffisantes conserve son statut et son échéance ; elle ne doit pas être présentée comme confirmée.
-
-**Échec avant enregistrement :** aucune réservation ni aucun paiement n'est créé.
+Une réservation est enregistrée pour une chambre, une période et un nombre de personnes compatible avec la capacité. Elle est « confirmée » si les arrhes sont payées (ou pas exigées), sinon « en attente d'arrhes ».
